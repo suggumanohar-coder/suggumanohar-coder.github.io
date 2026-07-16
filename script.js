@@ -166,4 +166,42 @@ document.addEventListener("DOMContentLoaded", () => {
                         const slopeDir = slopeX + slopeY;
                         
                         // Lowered peak multiplier (from 50 to 25) prevents harsh, pixelated starts
-                        const blend = Math.min(Math.max(-1.0, slopeDir * 2
+                        const blend = Math.min(Math.max(-1.0, slopeDir * 25), 1.0);
+                        
+                        let targetR, targetG, targetB;
+                        if (blend > 0) {
+                            targetR = baseR * (1 - blend) + rHighlight * blend;
+                            targetG = baseG * (1 - blend) + gHighlight * blend;
+                            targetB = baseB * (1 - blend) + bHighlight * blend;
+                        } else {
+                            const absBlend = Math.abs(blend);
+                            targetR = baseR * (1 - absBlend) + rShadow * absBlend;
+                            targetG = baseG * (1 - absBlend) + gShadow * absBlend;
+                            targetB = baseB * (1 - absBlend) + bShadow * absBlend;
+                        }
+                        
+                        data[pixelPos]     = Math.floor(baseR * (1 - factor) + targetR * factor);
+                        data[pixelPos + 1] = Math.floor(baseG * (1 - factor) + targetG * factor);
+                        data[pixelPos + 2] = Math.floor(baseB * (1 - factor) + targetB * factor);
+                        data[pixelPos + 3] = 255;
+                    }
+                } else {
+                    data[pixelPos]     = baseR;
+                    data[pixelPos + 1] = baseG;
+                    data[pixelPos + 2] = baseB;
+                    data[pixelPos + 3] = 255;
+                }
+            }
+        }
+        
+        canvasContext.putImageData(imgData, 0, 0);
+        
+        let temp = buffer1;
+        buffer1 = buffer2;
+        buffer2 = temp;
+        
+        requestAnimationFrame(processWaterSimulation);
+    }
+
+    requestAnimationFrame(processWaterSimulation);
+});
