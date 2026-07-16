@@ -72,7 +72,7 @@ window.addEventListener('mousemove', (e) => {
         const relX = Math.floor(e.clientX - bounds.left);
         const relY = Math.floor(e.clientY - bounds.top);
         
-        dropWater(relX, relY, 6, 400); // Shifted maximum energy down for soft wave impact
+        dropWater(relX, relY, 8, 500); // Shifted maximum energy down for soft wave impact
     }
 });
 
