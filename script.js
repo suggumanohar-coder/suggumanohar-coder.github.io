@@ -74,7 +74,7 @@ window.addEventListener('mousemove', (e) => {
         const relY = Math.floor(e.clientY - bounds.top);
         
         // Expanded radius to 16 for broad, fluid cursor waves instead of tiny lines
-        dropWater(relX, relY, 16, 120); 
+        dropWater(relX, relY, 35, 280); 
     }
 });
 
