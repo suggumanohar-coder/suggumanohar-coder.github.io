@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const backgroundCanvas = document.getElementById('hero-canvas');
     
     if (!themeToggle || !heroSection || !backgroundCanvas) {
-        console.error("Missing critical HTML elements! Check your IDs ('theme-toggle', 'about', 'hero-canvas').");
+        console.error("Missing critical HTML elements! Check your IDs.");
         return;
     }
 
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ==========================================
-    // 3. PHYSICAL WATER PROPAGATION ENGINE
+    // 3. PHYSICAL RAZOR-THIN HOLOGRAPHIC RING ENGINE
     // ==========================================
     function setupWaveBuffers() {
         width = heroSection.clientWidth || window.innerWidth;
@@ -51,22 +51,24 @@ document.addEventListener("DOMContentLoaded", () => {
     setupWaveBuffers();
     window.addEventListener('resize', setupWaveBuffers);
 
-    function dropWater(dx, dy, radius, force) {
+    // Drops an absolute razor-thin single-pixel outline ring. Zero center filling.
+    function dropRazorThinRing(dx, dy, radius, force) {
         if (dx < radius || dx > width - radius || dy < radius || dy > height - radius) return;
         
         for (let y = -radius; y <= radius; y++) {
             for (let x = -radius; x <= radius; x++) {
-                if (x * x + y * y < radius * radius) {
+                const dist = Math.hypot(x, y);
+                
+                // Strict edge check creates a perfect thin line ring instead of a full circle disk
+                if (Math.abs(dist - radius) < 1.2) {
                     const index = (dx + x) + (dy + y) * width;
-                    const dist = Math.sqrt(x * x + y * y);
-                    const amount = Math.cos((dist / radius) * Math.PI * 0.5);
-                    buffer1[index] += force * amount;
+                    buffer1[index] += force;
                 }
             }
         }
     }
 
-    // High-precision anti-crowding mouse threshold filters
+    // Precise anti-crowding mouse movement trackers
     let lastX = 0, lastY = 0;
     let lastDropTime = 0;
 
@@ -81,9 +83,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const distMoved = Math.hypot(relX - lastX, relY - lastY);
             const currentTime = performance.now();
             
-            // Restrict drops to a minimum 40px movement trail and 190ms interval
-            if (distMoved > 40 && currentTime - lastDropTime > 190) {
-                dropWater(relX, relY, 26, 26); 
+            // Spaced out triggers prevent overlap loops entirely
+            if (distMoved > 50 && currentTime - lastDropTime > 220) {
+                dropRazorThinRing(relX, relY, 30, 6); // Lower force prevents high peak explosions
                 lastX = relX;
                 lastY = relY;
                 lastDropTime = currentTime;
@@ -97,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         
-        // Base Canvas Colors
+        // Base Dynamic Background Layouts
         const baseR = isDark ? 9 : 255;
         const baseG = isDark ? 9 : 228;
         const baseB = isDark ? 10 : 196;
@@ -113,37 +115,37 @@ document.addEventListener("DOMContentLoaded", () => {
                     buffer1[idx + width]
                 ) * 0.5 - buffer2[idx];
                 
-                waveHeight *= 0.972; 
+                waveHeight *= 0.968; // Smooth decay profile
                 buffer2[idx] = waveHeight;
                 
                 let pixelPos = idx * 4;
                 
-                if (Math.abs(waveHeight) > 0.0005) {
+                if (Math.abs(waveHeight) > 0.0003) {
                     const slopeX = buffer1[idx + 1] - buffer1[idx - 1];
                     const slopeY = buffer1[idx + width] - buffer1[idx - width];
                     
                     const mag = Math.sqrt(slopeX * slopeX + slopeY * slopeY);
                     
-                    // Unified intensity factor mapping
-                    const factor = Math.min(mag * 140, 1.0);
+                    // Unified crisp reflection filter mapping
+                    const factor = Math.min(mag * 160, 0.85);
                     
-                    // Concentric mapping derived from amplitude to keep initial shapes perfectly uniform
-                    const blend = Math.min(Math.max(-1.0, waveHeight * 8), 1.0);
+                    // Tight linear clamping prevents massive color blobs and heavy pops
+                    const blend = Math.min(Math.max(-0.6, waveHeight * 12), 0.6);
                     
                     if (isDark) {
-                        // DARK MODE: Rich Beige, Slate Troughs, and Deep Charcoal Base
-                        const rDarkGrey = 34,  gDarkGrey = 34,  bDarkGrey = 38;   // Dark Slate Troughs
-                        const rBeige    = 214, gBeige    = 199, bBeige    = 183;  // Crisp Structural Beige
+                        // DARK MODE: Thin slate lines & precise accent beige tracking contours
+                        const rDarkGrey = 28,  gDarkGrey = 28,  bDarkGrey = 32;   
+                        const rBeige    = 214, gBeige    = 199, bBeige    = 183;  
                         
                         let targetR, targetG, targetB;
                         
                         if (blend > 0) {
-                            // Upward wave peaks morph beautifully into high-contrast beige highlights
+                            // Gentle positive peaks receive thin elegant beige lining
                             targetR = baseR * (1 - blend) + rBeige * blend;
                             targetG = baseG * (1 - blend) + gBeige * blend;
                             targetB = baseB * (1 - blend) + bBeige * blend;
                         } else {
-                            // Downward valleys transition cleanly into sleek dark grey contours
+                            // Negative troughs turn to dark grey contours instead of harsh black bubbles
                             const absBlend = Math.abs(blend);
                             targetR = baseR * (1 - absBlend) + rDarkGrey * absBlend;
                             targetG = baseG * (1 - absBlend) + gDarkGrey * absBlend;
@@ -155,9 +157,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         data[pixelPos + 2] = Math.floor(baseB * (1 - factor) + targetB * factor);
                         data[pixelPos + 3] = 255;
                     } else {
-                        // LIGHT MODE: Crystal fluid glass aesthetics with pristine highlights
-                        const rHighlight = 255, gHighlight = 253, bHighlight = 250; // Shimmering light reflections
-                        const rShadow    = 195, gShadow    = 170, bShadow    = 140; // Soft liquid shadows
+                        // LIGHT MODE: Crystal Fluid Outlines
+                        const rHighlight = 255, gHighlight = 253, bHighlight = 250; 
+                        const rShadow    = 200, gShadow    = 178, bShadow    = 150; 
                         
                         let targetR, targetG, targetB;
                         
