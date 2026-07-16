@@ -1,12 +1,12 @@
 // ==========================================
-// 1. SAFE RUN INITIALIZATION wrapper
+// 1. SAFE RUN INITIALIZATION WRAPPER
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     const themeToggle = document.getElementById('theme-toggle'); 
     const heroSection = document.getElementById('about');
     const backgroundCanvas = document.getElementById('hero-canvas');
     
-    // Safety check: Stop the script from crashing if elements are missing
+    // Stop the script from crashing if elements are missing in HTML
     if (!themeToggle || !heroSection || !backgroundCanvas) {
         console.error("Missing critical HTML elements! Check your IDs ('theme-toggle', 'about', 'hero-canvas').");
         return;
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let buffer2 = [];
 
     // ==========================================
-    // 2. THEME SYSTEM (Safely inside block)
+    // 2. THEME SYSTEM
     // ==========================================
     const currentTheme = localStorage.getItem('theme');
     if (currentTheme) {
