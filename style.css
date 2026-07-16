@@ -125,7 +125,13 @@ body {
     width: 100%;
     height: 100%;
     z-index: 1; 
-    pointer-events: none; /* Prevents the canvas from stealing mouse clicks */
+    pointer-events: none;
+    filter: none;
+    
+    /* ADD THIS FOR ELEGANT DARK SHADOW BLENDING */
+    /* Multiply darkens the pixels directly underneath the wave coordinates gracefully */
+    mix-blend-mode: multiply; 
+    opacity: 0.85; /* Softens the overall impact so it remains an elegant accent */
 }
 /* Ensure content stays above canvas and remains crisp */
 .hero-content {
