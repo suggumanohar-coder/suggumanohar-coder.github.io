@@ -1,12 +1,12 @@
 /* Custom CSS Variables for High-End Minimalist Aesthetics */
 :root {
-    --bg-color: #FAF9F6 !important;
+    --bg-color: #FAF9F6;
     --text-color: #000000;
     --text-muted: #4e4438;
     --accent-color: #000000;
     --card-bg: rgba(0, 0, 0, 0.03);
-    --nav-bg: rgba(235, 208, 177, 0.5); /* Slightly darker tint than #FFE4C4 with soft opacity */
-    --border-color: rgba(0, 0, 0, 0.1);
+    --nav-bg: rgba(240, 238, 230, 0.5); /* Slightly darker tint than #FFE4C4 with soft opacity */
+    --border-color: rgba(0, 0, 0, 0.07);
 }
 
 [data-theme="dark"] {
