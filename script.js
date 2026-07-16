@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ==========================================
-    // 3. BALANCED CONCENTRIC WAVE ENGINE
+    // 3. HD BIG & LONG-LASTING CONCENTRIC WAVE ENGINE
     // ==========================================
     function setupWaveBuffers() {
         width = heroSection.clientWidth || window.innerWidth;
@@ -66,23 +66,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Gentle mouse move listener to prevent ripple overcrowding
-    let lastX = 0, lastY = 0;
+    // Time throttling controls the exact number of ripples allowed to spawn
+    let lastDropTime = 0;
     window.addEventListener('mousemove', (e) => {
         const bounds = heroSection.getBoundingClientRect();
         if (e.clientX >= bounds.left && e.clientX <= bounds.right &&
             e.clientY >= bounds.top && e.clientY <= bounds.bottom) {
             
-            const relX = Math.floor(e.clientX - bounds.left);
-            const relY = Math.floor(e.clientY - bounds.top);
-            
-            // Calculate distance moved to prevent spawning duplicates when hovering statically
-            const distMoved = Math.hypot(relX - lastX, relY - lastY);
-            if (distMoved > 6) {
-                // Perfect balanced force configuration
-                dropWater(relX, relY, 8, 16); 
-                lastX = relX;
-                lastY = relY;
+            const currentTime = performance.now();
+            // Limits wave drops to once every 60ms to eliminate visual crowding completely
+            if (currentTime - lastDropTime > 60) {
+                const relX = Math.floor(e.clientX - bounds.left);
+                const relY = Math.floor(e.clientY - bounds.top);
+                
+                // Larger radius creates wider, sweeping physical rings
+                dropWater(relX, relY, 24, 28); 
+                lastDropTime = currentTime;
             }
         }
     });
@@ -94,16 +93,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         
         // Base Background Colors
-        // Light: Classic Bisque | Dark: Smokier, elegant Greyish-Black
-        const baseR = isDark ? 17 : 255;
-        const baseG = isDark ? 17 : 228;
-        const baseB = isDark ? 18 : 196;
+        // Light: Classic Bisque | Dark: Extra Deep Charcoal Greyish-Black
+        const baseR = isDark ? 11 : 255;
+        const baseG = isDark ? 11 : 228;
+        const baseB = isDark ? 12 : 196;
         
         for (let y = 1; y < height - 1; y++) {
             for (let x = 1; x < width - 1; x++) {
                 const idx = x + y * width;
                 
-                // 2D Wave Propagation Core
                 let waveHeight = (
                     buffer1[idx - 1] +
                     buffer1[idx + 1] +
@@ -111,56 +109,42 @@ document.addEventListener("DOMContentLoaded", () => {
                     buffer1[idx + width]
                 ) * 0.5 - buffer2[idx];
                 
-                // Tightened dampening (0.93) to fade the rings gracefully and prevent visual clutter
-                waveHeight *= 0.93; 
+                // Retaining 97.5% energy per frame makes the rings big, clear, and long-lasting
+                waveHeight *= 0.975; 
                 buffer2[idx] = waveHeight;
                 
                 let pixelPos = idx * 4;
                 
-                if (Math.abs(waveHeight) > 0.002) {
+                if (Math.abs(waveHeight) > 0.001) {
                     const slopeX = buffer1[idx + 1] - buffer1[idx - 1];
                     const slopeY = buffer1[idx + width] - buffer1[idx - width];
                     
-                    // Unified Gradient Magnitude for identical physical behavior
                     const mag = Math.sqrt(slopeX * slopeX + slopeY * slopeY);
-                    const factor = Math.min(mag * 240, 1.0);
+                    const factor = Math.min(mag * 200, 1.0);
                     
                     if (isDark) {
-                        // DARK MODE: Rich Beige (#c5b5a5), Darker Grey (#55555c) & Greyish-White (#dedee2)
-                        const rBeige = 197, gBeige = 181, bBeige = 165; 
-                        const rGrey  = 85,  gGrey  = 85,  bGrey  = 92;   
-                        const rWhite = 222, gWhite = 222, bWhite = 226; 
+                        // DARK MODE: Very dark grey base transitioning to rich structural beige
+                        const rDarkGrey = 42,  gDarkGrey = 42,  bDarkGrey = 48;   // Dark Slate Grey
+                        const rBeige    = 220, gBeige    = 209, bBeige    = 196;  // Premium Beige
                         
-                        // Dynamically mix colors depending on the wave's slope intensity
-                        let mixRatio = Math.min(mag * 140, 1.0);
-                        let targetR, targetG, targetB;
+                        let mixRatio = Math.min(mag * 120, 1.0);
                         
-                        if (mixRatio < 0.5) {
-                            // Gentle transitions go through smokier grey to rich beige
-                            const t = mixRatio * 2;
-                            targetR = rGrey * (1 - t) + rBeige * t;
-                            targetG = gGrey * (1 - t) + gBeige * t;
-                            targetB = bGrey * (1 - t) + bBeige * t;
-                        } else {
-                            // Intense wave crests pop with greyish-white highlights
-                            const t = (mixRatio - 0.5) * 2;
-                            targetR = rBeige * (1 - t) + rWhite * t;
-                            targetG = gBeige * (1 - t) + gWhite * t;
-                            targetB = bBeige * (1 - t) + bWhite * t;
-                        }
+                        // Blend from dark grey highlights to deep beige peaks
+                        const targetR = rDarkGrey * (1 - mixRatio) + rBeige * mixRatio;
+                        const targetG = gDarkGrey * (1 - mixRatio) + gBeige * mixRatio;
+                        const targetB = bDarkGrey * (1 - mixRatio) + bBeige * mixRatio;
                         
                         data[pixelPos]     = Math.floor(baseR * (1 - factor) + targetR * factor);
                         data[pixelPos + 1] = Math.floor(baseG * (1 - factor) + targetG * factor);
                         data[pixelPos + 2] = Math.floor(baseB * (1 - factor) + targetB * factor);
                         data[pixelPos + 3] = 255;
                     } else {
-                        // LIGHT MODE: Beautiful glass refraction that mimics Dark Mode's size perfectly
-                        const rHighlight = 255, gHighlight = 245, bHighlight = 230; // Shimmering light reflection
-                        const rShadow    = 210, gShadow    = 185, bShadow    = 155; // Natural warm water shadows
+                        // LIGHT MODE: Identical matching ripple dimensions using glass refraction
+                        const rHighlight = 255, gHighlight = 248, bHighlight = 240; 
+                        const rShadow    = 205, gShadow    = 180, bShadow    = 150; 
                         
-                        // Use raw slope direction to decide between highlight or shadow
                         const slopeDir = slopeX + slopeY;
-                        const blend = Math.min(Math.max(-1.0, slopeDir * 60), 1.0);
+                        const blend = Math.min(Math.max(-1.0, slopeDir * 50), 1.0);
                         
                         let targetR, targetG, targetB;
                         if (blend > 0) {
