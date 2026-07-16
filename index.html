@@ -1,55 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manohar | Portfolio</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name | Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts for bold, modern typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Premium Flex Navigation -->
     <nav class="navbar">
         <div class="logo">MyBrand</div>
         <div class="nav-links">
             <a href="#about">About</a>
             <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
-            <button class="theme-toggle">🌙</button>
+            <button id="theme-toggle">🌙</button>
         </div>
     </nav>
 
-    <!-- Immersive Hero Section -->
     <header id="about" class="hero">
         <canvas id="hero-canvas"></canvas>
         <div class="hero-content">
             <h1>Hi, I'm <span class="highlight">Manohar</span></h1>
             <p>I am a passionate creator, developer, and problem solver. Welcome to my digital space.</p>
-            <a href="#projects" class="btn">View My Work</a>
         </div>
     </header>
 
-    <!-- Grid-Based Projects Section -->
+    <div class="section-divider"></div>
+
     <section id="projects" class="projects-section">
         <h2>My Projects</h2>
         <div class="projects-grid">
             
-            <!-- Project Card 1 -->
             <div class="project-card">
                 <h3>Awesome Project One</h3>
                 <p>A brief description of the technologies you used and the problem this project solved.</p>
                 <a href="#" class="project-link">View Live Demo →</a>
             </div>
 
-            <!-- Project Card 2 -->
             <div class="project-card">
                 <h3>Awesome Project Two</h3>
                 <p>A brief description of the technologies you used and the problem this project solved.</p>
@@ -63,23 +54,23 @@
         <div class="footer-top">
             <div class="footer-socials">
                 <a href="https://github.com/YOUR-USERNAME" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                    <i class="fab fa-github"></i> <span>GitHub</span>
+                    <i class="fab fa-github"></i>
                 </a>
                 <a href="https://linkedin.com/in/YOUR-USERNAME" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                    <i class="fab fa-linkedin"></i> <span>LinkedIn</span>
+                    <i class="fab fa-linkedin"></i>
                 </a>
             </div>
             
             <div class="footer-email">
-                <a href="mailto:your.email@gmail.com" class="email-link">suggumanohar@gmail.com &rarr;</a>
+                <a href="mailto:suggumanohar@gmail.com" class="email-link">suggumanohar@gmail.com &rarr;</a>
             </div>
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2026 Your Name. All rights reserved.</p>
+            <p>&copy; 2026 Manohar. All rights reserved.</p>
         </div>
     </footer>
+
     <script src="script.js"></script>
-    
 </body>
 </html>
