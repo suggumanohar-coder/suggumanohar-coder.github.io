@@ -64,7 +64,8 @@ function dropWater(dx, dy, radius, force) {
 
 window.addEventListener('mousemove', (e) => {
     frameCount++;
-    if (frameCount % 2 !== 0) return; 
+    // Only drop a wave every 6 frames to allow broad expansion
+    if (frameCount % 6 !== 0) return; 
 
     const bounds = heroSection.getBoundingClientRect();
     if (e.clientX >= bounds.left && e.clientX <= bounds.right &&
@@ -73,9 +74,10 @@ window.addEventListener('mousemove', (e) => {
         const relX = Math.floor(e.clientX - bounds.left);
         const relY = Math.floor(e.clientY - bounds.top);
         
-        // Expanded radius to 16 for broad, fluid cursor waves instead of tiny lines
-        dropWater(relX, relY, 35, 280); 
+        // Broad radius, balanced force so it doesn't clip into bright spots
+        dropWater(relX, relY, 45, 350); 
     }
+});
 });
 
 function processWaterSimulation() {
@@ -110,7 +112,7 @@ function processWaterSimulation() {
                  buffer1[idx + width]) >> 1
             ) - buffer2[idx];
             
-            buffer2[idx] -= buffer2[idx] >> 5; 
+            buffer2[idx] -= buffer2[idx] >> 6; 
             
             let refraction = buffer2[idx];
             if (refraction !== 0) {
