@@ -75,7 +75,7 @@ window.addEventListener('mousemove', (e) => {
         const relY = Math.floor(e.clientY - bounds.top);
         
         // Broad radius, balanced force so it doesn't clip into bright spots
-        dropWater(relX, relY, 16, 350); 
+        dropWater(relX, relY, 16, 120); 
     }
 });
 });
