@@ -20,19 +20,17 @@ themeToggle.addEventListener('click', () => {
 });
 
 // ==========================================
-// 2. WATER RIPPLE ENGINE WITH TINT CALCULATION
+// 2. CLAMPED WATER RIPPLE ENGINE
 // ==========================================
 const heroSection = document.getElementById('about');
 const backgroundCanvas = document.getElementById('hero-canvas');
 const canvasContext = backgroundCanvas.getContext('2d');
 
 let width = 0, height = 0;
-let rippleDensity = 1.0; // Lowered density index slightly for fewer, smoother waves
+let rippleDensity = 2.0; 
 
 let buffer1 = [];
 let buffer2 = [];
-
-// Track frame throttling to omit redundant calculations, reducing wave density further
 let frameCount = 0;
 
 function setupWaveBuffers() {
@@ -62,7 +60,6 @@ function dropWater(dx, dy, radius, force) {
 
 window.addEventListener('mousemove', (e) => {
     frameCount++;
-    // Skip frames dynamically to make the ripple structure scarcer and cleaner
     if (frameCount % 2 !== 0) return; 
 
     const bounds = heroSection.getBoundingClientRect();
@@ -72,7 +69,7 @@ window.addEventListener('mousemove', (e) => {
         const relX = Math.floor(e.clientX - bounds.left);
         const relY = Math.floor(e.clientY - bounds.top);
         
-        dropWater(relX, relY, 6, 400); // Shifted maximum energy down for soft wave impact
+        dropWater(relX, relY, 4, 300); 
     }
 });
 
@@ -81,6 +78,21 @@ function processWaterSimulation() {
     const data = imgData.data;
     
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    
+    // Explicitly pre-fill the canvas array base color to prevent transparency issues
+    for (let i = 0; i < data.length; i += 4) {
+        if (isDark) {
+            data[i]     = 0;
+            data[i + 1] = 0;
+            data[i + 2] = 0;
+            data[i + 3] = 0; // Transparent base, styles control the background
+        } else {
+            data[i]     = 229;
+            data[i + 1] = 210;
+            data[i + 2] = 171;
+            data[i + 3] = 255;
+        }
+    }
     
     for (let y = 1; y < height - 1; y++) {
         for (let x = 1; x < width - 1; x++) {
@@ -97,21 +109,25 @@ function processWaterSimulation() {
             
             let refraction = buffer2[idx];
             if (refraction !== 0) {
-                let shade = Math.min(Math.max(refraction * rippleDensity, -100), 100);
+                let shade = Math.min(Math.max(refraction * rippleDensity, -120), 120);
                 let pixelPos = idx * 4;
                 
                 if (isDark) {
-                    // DARK MODE: Reflect light gold accents (#E5D2AB) onto black void
-                    data[pixelPos]     = Math.min(Math.max(0, 229 + shade * 0.5), 255); // R
-                    data[pixelPos + 1] = Math.min(Math.max(0, 210 + shade * 0.5), 255); // G
-                    data[pixelPos + 2] = Math.min(Math.max(0, 171 + shade * 0.3), 255); // B
-                    data[pixelPos + 3] = Math.min(Math.max(0, Math.abs(shade) * 2.5), 230); // Higher luminosity opacity
+                    // Bright, visible golden sparkles against black void
+                    data[pixelPos]     = Math.min(Math.max(0, 229 + shade * 2), 255); 
+                    data[pixelPos + 1] = Math.min(Math.max(0, 210 + shade * 1.8), 255); 
+                    data[pixelPos + 2] = Math.min(Math.max(0, 171 + shade * 1.2), 255); 
+                    data[pixelPos + 3] = Math.min(Math.max(40, Math.abs(shade) * 3), 255); 
                 } else {
-                    // LIGHT MODE: Produce dynamic deep refractions into tan page colors
-                    data[pixelPos]     = Math.max(0, 185 + shade); 
-                    data[pixelPos + 1] = Math.max(0, 170 + shade); 
-                    data[pixelPos + 2] = Math.max(0, 135 + shade); 
-                    data[pixelPos + 3] = Math.min(Math.max(0, Math.abs(shade) * 1.2), 160);
+                    // Darker fluid refractions gently moving over the sand canvas background
+                    let r = Math.min(Math.max(0, 229 + shade), 255);
+                    let g = Math.min(Math.max(0, 210 + shade), 255);
+                    let b = Math.min(Math.max(0, 171 + shade), 255);
+                    
+                    data[pixelPos]     = r;
+                    data[pixelPos + 1] = g;
+                    data[pixelPos + 2] = b;
+                    data[pixelPos + 3] = 255;
                 }
             }
         }
