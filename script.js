@@ -27,7 +27,7 @@ const backgroundCanvas = document.getElementById('hero-canvas');
 const canvasContext = backgroundCanvas.getContext('2d');
 
 let width = 0, height = 0;
-let rippleDensity = 2.0; // Lowered density index slightly for fewer, smoother waves
+let rippleDensity = 1.5; // Lowered density index slightly for fewer, smoother waves
 
 let buffer1 = [];
 let buffer2 = [];
