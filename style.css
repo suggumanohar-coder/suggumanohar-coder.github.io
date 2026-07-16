@@ -1,21 +1,21 @@
 /* Custom CSS Variables for High-End Minimalist Aesthetics */
 :root {
-    --bg-color: #fcfcfc;
-    --text-color: #111111;
-    --text-muted: #666666;
+    --bg-color: #E5D2AB;
+    --text-color: #000000;
+    --text-muted: #4a4538;
     --accent-color: #000000;
-    --card-bg: #f5f5f7;
-    --nav-bg: rgba(252, 252, 252, 0.85);
-    --border-color: #e5e5e7;
+    --card-bg: rgba(0, 0, 0, 0.04);
+    --nav-bg: rgba(229, 210, 171, 0.85);
+    --border-color: rgba(0, 0, 0, 0.15);
 }
 
 [data-theme="dark"] {
-    --bg-color: #0a0a0c;
-    --text-color: #f5f5f7;
-    --text-muted: #949499;
-    --accent-color: #ffffff;
-    --card-bg: #141417;
-    --nav-bg: rgba(10, 10, 12, 0.85);
+    --bg-color: #000000;
+    --text-color: #E5D2AB;
+    --text-muted: #a3957a;
+    --accent-color: #E5D2AB;
+    --card-bg: #111111;
+    --nav-bg: rgba(0, 0, 0, 0.85);
     --border-color: #222226;
 }
 
@@ -53,6 +53,7 @@ body {
     -webkit-backdrop-filter: blur(12px);
     z-index: 1000;
     border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.4s ease, border-color 0.4s ease;
 }
 
 .logo {
@@ -65,7 +66,6 @@ body {
 
 .nav-links {
     display: flex;
-    list-style: none;
     align-items: center;
     gap: 3rem;
 }
@@ -96,16 +96,13 @@ body {
     transform: rotate(15deg);
 }
 
-/* Bold Left-Aligned Hero Section */
-/* Position the interactive background canvas */
-
+/* Left-Aligned Hero Section Layout Configuration */
 .hero {
     min-height: 90vh;
     display: flex;
-    justify-content: center; /* Clean center alignment matching your screenshot */
+    justify-content: flex-start; /* STRICT LEFT ALIGNMENT */
     align-items: center;
     padding: 0 12%;
-    text-align: center;
     position: relative; 
     overflow: hidden;   
 }
@@ -113,32 +110,10 @@ body {
 .hero-content {
     max-width: 800px;
     margin-top: 4rem;
+    text-align: left; /* Text forced cleanly to the left margins */
     position: relative;
     z-index: 2; 
-    pointer-events: auto; /* Makes sure buttons remain perfectly clickable */
-}
-
-#hero-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1; 
-    pointer-events: none;
-    filter: none;
-    
-    /* ADD THIS FOR ELEGANT DARK SHADOW BLENDING */
-    /* Multiply darkens the pixels directly underneath the wave coordinates gracefully */
-    mix-blend-mode: multiply; 
-    opacity: 0.85; /* Softens the overall impact so it remains an elegant accent */
-}
-/* Ensure content stays above canvas and remains crisp */
-.hero-content {
-    max-width: 800px;
-    margin-top: 4rem;
-    position: relative;
-    z-index: 2; /* Forces text and buttons above the canvas */
+    pointer-events: none; /* Allows canvas interaction calculations beneath text strings */
 }
 
 .hero h1 {
@@ -157,34 +132,33 @@ body {
     line-height: 1.6;
 }
 
-/* Editorial Minimalist Buttons */
-.btn {
-    display: inline-block;
-    background-color: var(--accent-color);
-    color: var(--bg-color);
-    padding: 1rem 2.5rem;
-    text-decoration: none;
-    border-radius: 0px; /* Stark, geometric corners */
-    margin-top: 2.5rem;
-    font-weight: 600;
-    font-size: 0.95rem;
-    border: 1px solid var(--accent-color);
-    cursor: pointer;
-    transition: background-color 0.3s elements, color 0.3s;
+#hero-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; 
+    pointer-events: none;
+    mix-blend-mode: normal; 
+    opacity: 0.85;
 }
 
-.btn:hover {
-    background-color: transparent;
-    color: var(--accent-color);
+/* Distinct Structural Page Section Separation Line */
+.section-divider {
+    height: 1px;
+    width: 76%;
+    margin: 0 auto;
+    background-color: var(--border-color);
+    transition: background-color 0.4s ease;
 }
 
-/* Premium Grid Portfolio Layout */
-.projects {
+/* Portfolio Projects Display Layout */
+.projects-section {
     padding: 8rem 12%;
-    border-top: 1px solid var(--border-color);
 }
 
-.projects h2, .contact h2 {
+.projects-section h2 {
     font-size: 2.5rem;
     font-weight: 800;
     letter-spacing: -0.04em;
@@ -202,12 +176,12 @@ body {
     padding: 3.5rem;
     border-radius: 0px;
     border: 1px solid var(--border-color);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background-color 0.4s ease;
 }
 
 .project-card:hover {
     transform: translateY(-8px);
-    border-color: var(--accent-color);
+    border-color: var(--text-color);
 }
 
 .project-card h3 {
@@ -238,52 +212,16 @@ body {
     opacity: 0.7;
 }
 
-/* Clean, Asymmetric Contact Section */
-.contact {
-    padding: 8rem 12%;
-    border-top: 1px solid var(--border-color);
-    max-width: 100%;
-    margin: 0;
-}
-
-.contact p {
-    font-size: 1.25rem;
-    color: var(--text-muted);
-    margin-bottom: 3rem;
-    max-width: 500px;
-}
-
-.contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    max-width: 600px;
-}
-
-.contact-form input, .contact-form textarea {
-    padding: 1.25rem 0;
-    border: none;
-    border-bottom: 1px solid var(--border-color);
-    background-color: transparent;
-    color: var(--text-color);
-    font-size: 1.1rem;
-    border-radius: 0;
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-.contact-form input:focus, .contact-form textarea:focus {
-    border-bottom-color: var(--accent-color);
-}
-
-/* High-End Minimalist Footer & Contact Layout */
+/* Isolated Footer & Social Panel */
 .footer-contact {
-    padding: 6rem 12% 4rem 12%;
+    margin-top: 8rem; /* Keeps clean breathing distance from project nodes */
+    padding: 6rem 12 4rem 12%;
     border-top: 1px solid var(--border-color);
     background-color: var(--bg-color);
     display: flex;
     flex-direction: column;
     gap: 4rem;
+    transition: background-color 0.4s ease, border-top 0.4s ease;
 }
 
 .footer-top {
@@ -293,33 +231,22 @@ body {
     width: 100%;
 }
 
-/* Social link treatments with smooth hover transitions */
 .footer-socials {
     display: flex;
-    gap: 3rem;
+    gap: 2.5rem;
 }
 
 .footer-socials a {
     color: var(--text-color);
     text-decoration: none;
-    font-size: 1.1rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    transition: opacity 0.2s ease;
-}
-
-.footer-socials a i {
-    font-size: 1.3rem;
+    font-size: 1.6rem; /* Enlarge purely symbol-based icons slightly */
+    transition: opacity 0.2s ease, color 0.2s ease;
 }
 
 .footer-socials a:hover {
     opacity: 0.6;
 }
 
-/* Premium typographic treatment for the main email CTA */
 .footer-email .email-link {
     color: var(--text-color);
     text-decoration: none;
@@ -335,7 +262,6 @@ body {
     opacity: 0.7;
 }
 
-/* Copyright Bar alignment */
 .footer-bottom {
     border-top: 1px solid var(--border-color);
     padding-top: 2rem;
@@ -346,27 +272,15 @@ body {
 .footer-bottom p {
     font-size: 0.9rem;
     color: var(--text-muted);
-    font-weight: 400;
 }
 
-/* Mobile Layout Breakpoint for smaller viewports */
 @media (max-width: 768px) {
-    .footer-contact {
-        padding: 4rem 6% 3rem 6%;
-        gap: 3rem;
-    }
-    
     .footer-top {
         flex-direction: column;
         align-items: flex-start;
         gap: 2.5rem;
     }
-    
-    .footer-socials {
-        gap: 2rem;
-    }
-    
-    .footer-email .email-link {
-        font-size: 1.1rem;
+    .projects-grid {
+        grid-template-columns: 1fr;
     }
 }
