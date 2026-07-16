@@ -1,11 +1,11 @@
 /* Custom CSS Variables for High-End Minimalist Aesthetics */
 :root {
-    --bg-color: #FAF9F6;
+    --bg-color: #FAF9F6 !important;
     --text-color: #000000;
     --text-muted: #4e4438;
     --accent-color: #000000;
     --card-bg: rgba(0, 0, 0, 0.03);
-    --nav-bg: rgba(235, 208, 177, 0.85); /* Slightly darker tint than #FFE4C4 with soft opacity */
+    --nav-bg: rgba(235, 208, 177, 0.5); /* Slightly darker tint than #FFE4C4 with soft opacity */
     --border-color: rgba(0, 0, 0, 0.1);
 }
 
@@ -14,7 +14,7 @@
     --text-color: #FAD6A5; /* Muted Apricot Font Color */
     --text-muted: #a68e6d;
     --accent-color: #FAD6A5;
-    --card-bg: #111111;
+    --card-bg: rgba(1, 1, 1, 0.8);
     --nav-bg: rgba(0, 0, 0, 0.85);
     --border-color: #222226;
 }
