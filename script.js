@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ==========================================
-    // 3. PHYSICAL RAZOR-THIN HOLOGRAPHIC RING ENGINE
+    // 3. SMOOTH SMOOTH GAUSSIAN RING PROPAGATION ENGINE
     // ==========================================
     function setupWaveBuffers() {
         width = heroSection.clientWidth || window.innerWidth;
@@ -51,24 +51,31 @@ document.addEventListener("DOMContentLoaded", () => {
     setupWaveBuffers();
     window.addEventListener('resize', setupWaveBuffers);
 
-    // Drops an absolute razor-thin single-pixel outline ring. Zero center filling.
-    function dropRazorThinRing(dx, dy, radius, force) {
-        if (dx < radius || dx > width - radius || dy < radius || dy > height - radius) return;
+    // Drops a beautifully smoothed ring with a perfectly customized width profile
+    function dropSmoothRing(dx, dy, targetRadius, force) {
+        // Broaden the sampling radius slightly to account for the smooth thickness transition
+        const scanRadius = Math.ceil(targetRadius + 6);
+        if (dx < scanRadius || dx > width - scanRadius || dy < scanRadius || dy > height - scanRadius) return;
         
-        for (let y = -radius; y <= radius; y++) {
-            for (let x = -radius; x <= radius; x++) {
+        // Controlled ring width profile (~0.35x thicker than a raw 1px line)
+        const ringThickness = 3.2; 
+        
+        for (let y = -scanRadius; y <= scanRadius; y++) {
+            for (let x = -scanRadius; x <= scanRadius; x++) {
                 const dist = Math.hypot(x, y);
                 
-                // Strict edge check creates a perfect thin line ring instead of a full circle disk
-                if (Math.abs(dist - radius) < 1.2) {
+                // Gaussian falloff centered right on the ring radius prevents hard aliasing pops
+                const delta = Math.abs(dist - targetRadius);
+                if (delta < ringThickness) {
                     const index = (dx + x) + (dy + y) * width;
-                    buffer1[index] += force;
+                    const factor = Math.exp(-0.5 * Math.pow(delta / (ringThickness * 0.5), 2));
+                    buffer1[index] += force * factor;
                 }
             }
         }
     }
 
-    // Precise anti-crowding mouse movement trackers
+    // High sensitivity mouse state tracking
     let lastX = 0, lastY = 0;
     let lastDropTime = 0;
 
@@ -83,9 +90,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const distMoved = Math.hypot(relX - lastX, relY - lastY);
             const currentTime = performance.now();
             
-            // Spaced out triggers prevent overlap loops entirely
-            if (distMoved > 50 && currentTime - lastDropTime > 220) {
-                dropRazorThinRing(relX, relY, 30, 6); // Lower force prevents high peak explosions
+            // High sensitivity threshold: Responds to micro-movements (8px steps, 25ms intervals)
+            if (distMoved > 8 && currentTime - lastDropTime > 25) {
+                
+                // Dynamic Point-to-Big expansion simulation loop
+                // Quickly drops consecutive growing rings to simulate a sharp birth from a point out to full size
+                setTimeout(() => dropSmoothRing(relX, relY, 6,  2.5), 0);
+                setTimeout(() => dropSmoothRing(relX, relY, 16, 4.0), 16);
+                setTimeout(() => dropSmoothRing(relX, relY, 28, 5.5), 32);
+                
                 lastX = relX;
                 lastY = relY;
                 lastDropTime = currentTime;
@@ -99,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         
-        // Base Dynamic Background Layouts
+        // Dynamic Palette Anchors
         const baseR = isDark ? 9 : 255;
         const baseG = isDark ? 9 : 228;
         const baseB = isDark ? 10 : 196;
@@ -115,37 +128,32 @@ document.addEventListener("DOMContentLoaded", () => {
                     buffer1[idx + width]
                 ) * 0.5 - buffer2[idx];
                 
-                waveHeight *= 0.968; // Smooth decay profile
+                waveHeight *= 0.970; // Smooth wave energy conservation profile
                 buffer2[idx] = waveHeight;
                 
                 let pixelPos = idx * 4;
                 
-                if (Math.abs(waveHeight) > 0.0003) {
+                if (Math.abs(waveHeight) > 0.0002) {
                     const slopeX = buffer1[idx + 1] - buffer1[idx - 1];
                     const slopeY = buffer1[idx + width] - buffer1[idx - width];
                     
                     const mag = Math.sqrt(slopeX * slopeX + slopeY * slopeY);
+                    const factor = Math.min(mag * 150, 0.85);
                     
-                    // Unified crisp reflection filter mapping
-                    const factor = Math.min(mag * 160, 0.85);
-                    
-                    // Tight linear clamping prevents massive color blobs and heavy pops
                     const blend = Math.min(Math.max(-0.6, waveHeight * 12), 0.6);
                     
                     if (isDark) {
-                        // DARK MODE: Thin slate lines & precise accent beige tracking contours
-                        const rDarkGrey = 28,  gDarkGrey = 28,  bDarkGrey = 32;   
+                        // DARK MODE: Refined deep charcoal slate valleys & sleek beige crest boundaries
+                        const rDarkGrey = 34,  gDarkGrey = 34,  bDarkGrey = 38;   
                         const rBeige    = 214, gBeige    = 199, bBeige    = 183;  
                         
                         let targetR, targetG, targetB;
                         
                         if (blend > 0) {
-                            // Gentle positive peaks receive thin elegant beige lining
                             targetR = baseR * (1 - blend) + rBeige * blend;
                             targetG = baseG * (1 - blend) + gBeige * blend;
                             targetB = baseB * (1 - blend) + bBeige * blend;
                         } else {
-                            // Negative troughs turn to dark grey contours instead of harsh black bubbles
                             const absBlend = Math.abs(blend);
                             targetR = baseR * (1 - absBlend) + rDarkGrey * absBlend;
                             targetG = baseG * (1 - absBlend) + gDarkGrey * absBlend;
@@ -157,9 +165,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         data[pixelPos + 2] = Math.floor(baseB * (1 - factor) + targetB * factor);
                         data[pixelPos + 3] = 255;
                     } else {
-                        // LIGHT MODE: Crystal Fluid Outlines
+                        // LIGHT MODE: Crystal Refractive Fluid Outlines
                         const rHighlight = 255, gHighlight = 253, bHighlight = 250; 
-                        const rShadow    = 200, gShadow    = 178, bShadow    = 150; 
+                        const rShadow    = 195, gShadow    = 170, bShadow    = 140; 
                         
                         let targetR, targetG, targetB;
                         
