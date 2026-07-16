@@ -97,6 +97,8 @@ body {
 }
 
 /* Bold Left-Aligned Hero Section */
+/* Position the interactive background canvas */
+
 .hero {
     min-height: 90vh;
     display: flex;
@@ -104,11 +106,25 @@ body {
     align-items: center;
     padding: 0 12%;
     text-align: left;
+    position: relative; /* Context for absolute canvas positioning */
+    overflow: hidden;   /* Keeps particles from causing page scrollbars */
+}
+#hero-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Puts it behind the content */
+    pointer-events: none; /* Allows clicks to pass through to buttons/text selection */
 }
 
+/* Ensure content stays above canvas and remains crisp */
 .hero-content {
     max-width: 800px;
     margin-top: 4rem;
+    position: relative;
+    z-index: 2; /* Forces text and buttons above the canvas */
 }
 
 .hero h1 {
@@ -246,42 +262,97 @@ body {
     border-bottom-color: var(--accent-color);
 }
 
-/* Minimalist Footer */
-footer {
+/* High-End Minimalist Footer & Contact Layout */
+.footer-contact {
+    padding: 6rem 12% 4rem 12%;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.footer-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 4rem 12%;
-    border-top: 1px solid var(--border-color);
-    background-color: var(--bg-color);
+    width: 100%;
 }
 
-.social-icons {
+/* Social link treatments with smooth hover transitions */
+.footer-socials {
     display: flex;
-    gap: 2.5rem;
-    margin-bottom: 0;
+    gap: 3rem;
 }
 
-.social-icons a {
-    color: var(--text-muted);
-    font-size: 1.25rem;
-    transition: color 0.2s;
-}
-
-.social-icons a:hover {
+.footer-socials a {
     color: var(--text-color);
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: opacity 0.2s ease;
 }
 
-footer p {
+.footer-socials a i {
+    font-size: 1.3rem;
+}
+
+.footer-socials a:hover {
+    opacity: 0.6;
+}
+
+/* Premium typographic treatment for the main email CTA */
+.footer-email .email-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    border-bottom: 2px solid var(--text-color);
+    padding-bottom: 4px;
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.footer-email .email-link:hover {
+    opacity: 0.7;
+}
+
+/* Copyright Bar alignment */
+.footer-bottom {
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-bottom p {
     font-size: 0.9rem;
     color: var(--text-muted);
+    font-weight: 400;
 }
 
-/* Responsive Scaling Overrides */
-@media (max-width: 900px) {
-    .hero h1 { font-size: 3.2rem; }
-    .projects-grid { grid-template-columns: 1fr; gap: 2rem; }
-    .navbar { padding: 1.5rem 5%; }
-    .hero, .projects, .contact, footer { padding-left: 5%; padding-right: 5%; }
-    footer { flex-direction: column-reverse; gap: 2rem; text-align: center; }
+/* Mobile Layout Breakpoint for smaller viewports */
+@media (max-width: 768px) {
+    .footer-contact {
+        padding: 4rem 6% 3rem 6%;
+        gap: 3rem;
+    }
+    
+    .footer-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2.5rem;
+    }
+    
+    .footer-socials {
+        gap: 2rem;
+    }
+    
+    .footer-email .email-link {
+        font-size: 1.1rem;
+    }
 }
