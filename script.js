@@ -87,25 +87,25 @@ function processWaterSimulation() {
     
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     
-    // Fill base background colors
+    // 1. Establish clean base background states
+    const baseR = isDark ? 0 : 255;
+    const baseG = isDark ? 0 : 228;
+    const baseB = isDark ? 0 : 196;
+    const baseA = isDark ? 0 : 255;
+    
     for (let i = 0; i < data.length; i += 4) {
-        if (isDark) {
-            data[i]     = 0;
-            data[i + 1] = 0;
-            data[i + 2] = 0;
-            data[i + 3] = 0; 
-        } else {
-            data[i]     = 255; // #FFE4C4 R
-            data[i + 1] = 228; // #FFE4C4 G
-            data[i + 2] = 196; // #FFE4C4 B
-            data[i + 3] = 255;
-        }
+        data[i]     = baseR;
+        data[i + 1] = baseG;
+        data[i + 2] = baseB;
+        data[i + 3] = baseA;
     }
     
+    // 2. Compute true wave physics and surface slopes
     for (let y = 1; y < height - 1; y++) {
         for (let x = 1; x < width - 1; x++) {
             const idx = x + y * width;
             
+            // Traditional 2D wave propagation formula
             buffer2[idx] = (
                 (buffer1[idx - 1] +
                  buffer1[idx + 1] +
@@ -113,31 +113,34 @@ function processWaterSimulation() {
                  buffer1[idx + width]) >> 1
             ) - buffer2[idx];
             
+            // Natural energy friction decay dampening
             buffer2[idx] -= buffer2[idx] >> 6; 
             
-            let refraction = buffer2[idx];
-            if (refraction !== 0) {
-                // 1. INCREASE DENSITY MUTATION FOR HIGH SHARPNESS
-                let shade = refraction * 3.5; 
-                let pixelPos = idx * 4;
+            const currentWave = buffer2[idx];
+            if (currentWave !== 0) {
+                // Calculate spatial gradients (slopes of the water surface)
+                const slopeX = buffer2[idx + 1] - buffer2[idx - 1];
+                const slopeY = buffer2[idx + width] - buffer2[idx - width];
                 
-                // 2. APPLY A SHARP MODULO SINE WAVE MATHEMATIC 
-                // This forces the blur to separate into clean, crisp concentric ripples
-                let sharpEdge = Math.sin(shade * 0.15) * 45;
+                // The refraction intensity amount
+                const intensity = (slopeX + slopeY) * 0.4;
+                const pixelPos = idx * 4;
                 
                 if (isDark) {
-                    // DARK MODE: Ultra-sharp Tuscan Amber ripples that maintain high distinction
-                    let factor = Math.min(Math.max(0, 45 + sharpEdge * 1.5), 235);
+                    // DARK MODE: Smooth, glowing Tuscan Amber contours that match your font color
+                    // Completely zero grain, high-clarity organic curves
+                    const factor = Math.min(Math.max(0, 30 + intensity * 2.5), 240);
                     
-                    data[pixelPos]     = Math.floor(factor * 0.98); 
-                    data[pixelPos + 1] = Math.floor(factor * 0.84); 
-                    data[pixelPos + 2] = Math.floor(factor * 0.65); 
-                    data[pixelPos + 3] = Math.min(Math.max(0, Math.abs(sharpEdge) * 4), 240); 
+                    data[pixelPos]     = Math.floor(factor * 0.98); // #FAD6A5 R-Ratio
+                    data[pixelPos + 1] = Math.floor(factor * 0.84); // #FAD6A5 G-Ratio
+                    data[pixelPos + 2] = Math.floor(factor * 0.65); // #FAD6A5 B-Ratio
+                    data[pixelPos + 3] = Math.min(Math.max(20, Math.abs(intensity) * 5), 230);
                 } else {
-                    // LIGHT MODE: High-definition liquid distortions mimicking clear surface water
-                    let r = Math.min(Math.max(0, 255 + sharpEdge), 255);
-                    let g = Math.min(Math.max(0, 228 + sharpEdge * 0.9), 255);
-                    let b = Math.min(Math.max(0, 196 + sharpEdge * 0.75), 255);
+                    // LIGHT MODE: Crisp, pristine glass-like refractions bending the solid Bisque color space
+                    // Shifting intensity shifts the colors seamlessly toward clear shadows and pure light reflections
+                    const r = Math.min(Math.max(0, baseR + intensity * 1.2), 255);
+                    const g = Math.min(Math.max(0, baseG + intensity * 0.9), 255);
+                    const b = Math.min(Math.max(0, baseB + intensity * 0.4), 255);
                     
                     data[pixelPos]     = r;
                     data[pixelPos + 1] = g;
@@ -150,6 +153,7 @@ function processWaterSimulation() {
     
     canvasContext.putImageData(imgData, 0, 0);
     
+    // Swap buffers for the next physics tracking frame
     let temp = buffer1;
     buffer1 = buffer2;
     buffer2 = temp;
