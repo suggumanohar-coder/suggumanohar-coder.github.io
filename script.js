@@ -80,31 +80,30 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastDropTime = 0;
 
     window.addEventListener('mousemove', (e) => {
-        const bounds = heroSection.getBoundingClientRect();
-        if (e.clientX >= bounds.left && e.clientX <= bounds.right &&
-            e.clientY >= bounds.top && e.clientY <= bounds.bottom) {
+    const bounds = heroSection.getBoundingClientRect();
+    if (e.clientX >= bounds.left && e.clientX <= bounds.right &&
+        e.clientY >= bounds.top && e.clientY <= bounds.bottom) {
+        
+        const relX = Math.floor(e.clientX - bounds.left);
+        const relY = Math.floor(e.clientY - bounds.top);
+        
+        const distMoved = Math.hypot(relX - lastX, relY - lastY);
+        const currentTime = performance.now();
+        
+        // >>> CHANGE THESE TWO NUMBERS TO REDUCE RIPPLES <<<
+        if (distMoved > 25 && currentTime - lastDropTime > 120) { 
             
-            const relX = Math.floor(e.clientX - bounds.left);
-            const relY = Math.floor(e.clientY - bounds.top);
+            // Dynamic Point-to-Big expansion simulation loop
+            setTimeout(() => dropSmoothRing(relX, relY, 6,  2.5), 0);
+            setTimeout(() => dropSmoothRing(relX, relY, 16, 4.0), 16);
+            setTimeout(() => dropSmoothRing(relX, relY, 28, 5.5), 32);
             
-            const distMoved = Math.hypot(relX - lastX, relY - lastY);
-            const currentTime = performance.now();
-            
-            // High sensitivity threshold: Responds to micro-movements (8px steps, 25ms intervals)
-            if (distMoved > 8 && currentTime - lastDropTime > 25) {
-                
-                // Dynamic Point-to-Big expansion simulation loop
-                // Quickly drops consecutive growing rings to simulate a sharp birth from a point out to full size
-                setTimeout(() => dropSmoothRing(relX, relY, 6,  2.5), 0);
-                setTimeout(() => dropSmoothRing(relX, relY, 16, 4.0), 16);
-                setTimeout(() => dropSmoothRing(relX, relY, 28, 5.5), 32);
-                
-                lastX = relX;
-                lastY = relY;
-                lastDropTime = currentTime;
-            }
+            lastX = relX;
+            lastY = relY;
+            lastDropTime = currentTime;
         }
-    });
+    }
+});
 
     function processWaterSimulation() {
         const imgData = canvasContext.createImageData(width, height);
