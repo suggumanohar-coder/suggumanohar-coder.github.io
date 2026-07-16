@@ -27,7 +27,7 @@ const backgroundCanvas = document.getElementById('hero-canvas');
 const canvasContext = backgroundCanvas.getContext('2d');
 
 let width = 0, height = 0;
-let rippleDensity = 1.5; // Lowered density index slightly for fewer, smoother waves
+let rippleDensity = 1.0; // Lowered density index slightly for fewer, smoother waves
 
 let buffer1 = [];
 let buffer2 = [];
@@ -72,7 +72,7 @@ window.addEventListener('mousemove', (e) => {
         const relX = Math.floor(e.clientX - bounds.left);
         const relY = Math.floor(e.clientY - bounds.top);
         
-        dropWater(relX, relY, 8, 500); // Shifted maximum energy down for soft wave impact
+        dropWater(relX, relY, 6, 400); // Shifted maximum energy down for soft wave impact
     }
 });
 
