@@ -75,10 +75,11 @@ window.addEventListener('mousemove', (e) => {
         const relY = Math.floor(e.clientY - bounds.top);
         
         // Broad radius, balanced force so it doesn't clip into bright spots
-        dropWater(relX, relY, 16, 120); 
+        dropWater(relX, relY, 45, 380); 
     }
 });
-});
+
+// 🛑 REMOVED STRAY "});" FROM HERE
 
 function processWaterSimulation() {
     const imgData = canvasContext.createImageData(width, height);
@@ -86,7 +87,7 @@ function processWaterSimulation() {
     
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     
-    // Smooth grid pre-allocation matching page environments exactly
+    // Fill base background colors
     for (let i = 0; i < data.length; i += 4) {
         if (isDark) {
             data[i]     = 0;
@@ -94,9 +95,9 @@ function processWaterSimulation() {
             data[i + 2] = 0;
             data[i + 3] = 0; 
         } else {
-            data[i]     = 255; // Pure #FFE4C4 Base R
-            data[i + 1] = 228; // Pure #FFE4C4 Base G
-            data[i + 2] = 196; // Pure #FFE4C4 Base B
+            data[i]     = 255; // #FFE4C4 R
+            data[i + 1] = 228; // #FFE4C4 G
+            data[i + 2] = 196; // #FFE4C4 B
             data[i + 3] = 255;
         }
     }
@@ -116,24 +117,27 @@ function processWaterSimulation() {
             
             let refraction = buffer2[idx];
             if (refraction !== 0) {
-                let shade = refraction * rippleDensity;
+                // 1. INCREASE DENSITY MUTATION FOR HIGH SHARPNESS
+                let shade = refraction * 3.5; 
                 let pixelPos = idx * 4;
                 
+                // 2. APPLY A SHARP MODULO SINE WAVE MATHEMATIC 
+                // This forces the blur to separate into clean, crisp concentric ripples
+                let sharpEdge = Math.sin(shade * 0.15) * 45;
+                
                 if (isDark) {
-                    // DARK MODE: Organic Tuscan Amber (#FAD6A5 shade blends) shifting down into deep near-black
-                    // Totally eliminates harsh glass-white tones
-                    let factor = Math.min(Math.max(0, 40 + shade * 0.8), 200);
+                    // DARK MODE: Ultra-sharp Tuscan Amber ripples that maintain high distinction
+                    let factor = Math.min(Math.max(0, 45 + sharpEdge * 1.5), 235);
                     
-                    data[pixelPos]     = Math.floor(factor * 0.98); // Tuscan Red component
-                    data[pixelPos + 1] = Math.floor(factor * 0.84); // Tuscan Green component
-                    data[pixelPos + 2] = Math.floor(factor * 0.65); // Tuscan Blue component
-                    data[pixelPos + 3] = Math.min(Math.max(0, Math.abs(shade) * 2), 220); 
+                    data[pixelPos]     = Math.floor(factor * 0.98); 
+                    data[pixelPos + 1] = Math.floor(factor * 0.84); 
+                    data[pixelPos + 2] = Math.floor(factor * 0.65); 
+                    data[pixelPos + 3] = Math.min(Math.max(0, Math.abs(sharpEdge) * 4), 240); 
                 } else {
-                    // LIGHT MODE: Soft background color bending. Removes all muddy brown shadows.
-                    // Creates pure fluid refraction highlights and subtle dark-bisque shifts
-                    let r = Math.min(Math.max(0, 255 + shade * 0.25), 255);
-                    let g = Math.min(Math.max(0, 228 + shade * 0.23), 255);
-                    let b = Math.min(Math.max(0, 196 + shade * 0.18), 255);
+                    // LIGHT MODE: High-definition liquid distortions mimicking clear surface water
+                    let r = Math.min(Math.max(0, 255 + sharpEdge), 255);
+                    let g = Math.min(Math.max(0, 228 + sharpEdge * 0.9), 255);
+                    let b = Math.min(Math.max(0, 196 + sharpEdge * 0.75), 255);
                     
                     data[pixelPos]     = r;
                     data[pixelPos + 1] = g;
@@ -152,5 +156,4 @@ function processWaterSimulation() {
     
     requestAnimationFrame(processWaterSimulation);
 }
-
 requestAnimationFrame(processWaterSimulation);
