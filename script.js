@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // High-precision mouse movement filters to prevent overcrowding
+    // High-precision anti-crowding mouse threshold filters
     let lastX = 0, lastY = 0;
     let lastDropTime = 0;
 
@@ -81,10 +81,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const distMoved = Math.hypot(relX - lastX, relY - lastY);
             const currentTime = performance.now();
             
-            // Only drop if mouse moved at least 35px AND 180ms have passed
-            // This prevents screen-filling clusters and creates spaced, organic rings
-            if (distMoved > 35 && currentTime - lastDropTime > 180) {
-                dropWater(relX, relY, 24, 25); 
+            // Restrict drops to a minimum 40px movement trail and 190ms interval
+            if (distMoved > 40 && currentTime - lastDropTime > 190) {
+                dropWater(relX, relY, 26, 26); 
                 lastX = relX;
                 lastY = relY;
                 lastDropTime = currentTime;
@@ -98,10 +97,10 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         
-        // Base Background Colors
-        const baseR = isDark ? 13 : 255;
-        const baseG = isDark ? 13 : 228;
-        const baseB = isDark ? 14 : 196;
+        // Base Canvas Colors
+        const baseR = isDark ? 9 : 255;
+        const baseG = isDark ? 9 : 228;
+        const baseB = isDark ? 10 : 196;
         
         for (let y = 1; y < height - 1; y++) {
             for (let x = 1; x < width - 1; x++) {
@@ -114,44 +113,41 @@ document.addEventListener("DOMContentLoaded", () => {
                     buffer1[idx + width]
                 ) * 0.5 - buffer2[idx];
                 
-                // 0.970 decay leaves ripples lingering beautifully without over-accumulating
-                waveHeight *= 0.970; 
+                waveHeight *= 0.972; 
                 buffer2[idx] = waveHeight;
                 
                 let pixelPos = idx * 4;
                 
-                if (Math.abs(waveHeight) > 0.001) {
+                if (Math.abs(waveHeight) > 0.0005) {
                     const slopeX = buffer1[idx + 1] - buffer1[idx - 1];
                     const slopeY = buffer1[idx + width] - buffer1[idx - width];
                     
                     const mag = Math.sqrt(slopeX * slopeX + slopeY * slopeY);
                     
-                    // Unified intensity scaling
-                    const factor = Math.min(mag * 180, 1.0);
+                    // Unified intensity factor mapping
+                    const factor = Math.min(mag * 140, 1.0);
+                    
+                    // Concentric mapping derived from amplitude to keep initial shapes perfectly uniform
+                    const blend = Math.min(Math.max(-1.0, waveHeight * 8), 1.0);
                     
                     if (isDark) {
-                        // DARK MODE: Rich Beige, Dark Charcoal Grey, and true Obsidian Black Shadows
-                        const rTrueBlack = 0,   gTrueBlack = 0,   bTrueBlack = 0;    // Absolute Shadow
-                        const rDarkGrey  = 30,  gDarkGrey  = 30,  bDarkGrey  = 34;   // Dark Charcoal Grey
-                        const rBeige     = 212, gBeige     = 196, bBeige     = 180;  // Premium Accent Beige
-                        
-                        // Use slope direction to differentiate peak light vs trough shadow
-                        const slopeDir = slopeX + slopeY;
-                        const blend = Math.min(Math.max(-1.0, slopeDir * 40), 1.0);
+                        // DARK MODE: Rich Beige, Slate Troughs, and Deep Charcoal Base
+                        const rDarkGrey = 34,  gDarkGrey = 34,  bDarkGrey = 38;   // Dark Slate Troughs
+                        const rBeige    = 214, gBeige    = 199, bBeige    = 183;  // Crisp Structural Beige
                         
                         let targetR, targetG, targetB;
-                        if (blend < 0) {
-                            // Troughs get cast in deep true obsidian black shadows
-                            const t = Math.abs(blend);
-                            targetR = baseR * (1 - t) + rTrueBlack * t;
-                            targetG = baseG * (1 - t) + gTrueBlack * t;
-                            targetB = baseB * (1 - t) + bTrueBlack * t;
+                        
+                        if (blend > 0) {
+                            // Upward wave peaks morph beautifully into high-contrast beige highlights
+                            targetR = baseR * (1 - blend) + rBeige * blend;
+                            targetG = baseG * (1 - blend) + gBeige * blend;
+                            targetB = baseB * (1 - blend) + bBeige * blend;
                         } else {
-                            // Crests smoothly light up transitioning from charcoal to rich beige
-                            const t = blend;
-                            targetR = rDarkGrey * (1 - t) + rBeige * t;
-                            targetG = gDarkGrey * (1 - t) + gBeige * t;
-                            targetB = bDarkGrey * (1 - t) + bBeige * t;
+                            // Downward valleys transition cleanly into sleek dark grey contours
+                            const absBlend = Math.abs(blend);
+                            targetR = baseR * (1 - absBlend) + rDarkGrey * absBlend;
+                            targetG = baseG * (1 - absBlend) + gDarkGrey * absBlend;
+                            targetB = baseB * (1 - absBlend) + bDarkGrey * absBlend;
                         }
                         
                         data[pixelPos]     = Math.floor(baseR * (1 - factor) + targetR * factor);
@@ -159,16 +155,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         data[pixelPos + 2] = Math.floor(baseB * (1 - factor) + targetB * factor);
                         data[pixelPos + 3] = 255;
                     } else {
-                        // LIGHT MODE: Balanced glass shadows and bright highlights with smoothed peaks
-                        const rHighlight = 255, gHighlight = 252, bHighlight = 247; // Smooth white shimmer
-                        const rShadow    = 200, gShadow    = 175, bShadow    = 145; // Soft warm shadows
-                        
-                        const slopeDir = slopeX + slopeY;
-                        
-                        // Lowered peak multiplier (from 50 to 25) prevents harsh, pixelated starts
-                        const blend = Math.min(Math.max(-1.0, slopeDir * 25), 1.0);
+                        // LIGHT MODE: Crystal fluid glass aesthetics with pristine highlights
+                        const rHighlight = 255, gHighlight = 253, bHighlight = 250; // Shimmering light reflections
+                        const rShadow    = 195, gShadow    = 170, bShadow    = 140; // Soft liquid shadows
                         
                         let targetR, targetG, targetB;
+                        
                         if (blend > 0) {
                             targetR = baseR * (1 - blend) + rHighlight * blend;
                             targetG = baseG * (1 - blend) + gHighlight * blend;
