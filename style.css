@@ -1,20 +1,19 @@
 /* Custom CSS Variables for High-End Minimalist Aesthetics */
-/* Custom CSS Variables for High-End Minimalist Aesthetics */
 :root {
-    --bg-color: #FFE4C4 !important; /* Force the custom sand color */
-    --text-color: #000000 !important;
-    --text-muted: #4a4538;
+    --bg-color: #FFE4C4; /* Warm Bisque Background */
+    --text-color: #000000;
+    --text-muted: #4e4438;
     --accent-color: #000000;
-    --card-bg: rgba(0, 0, 0, 0.04);
-    --nav-bg: rgba(229, 210, 171, 0.85);
-    --border-color: rgba(0, 0, 0, 0.15);
+    --card-bg: rgba(0, 0, 0, 0.03);
+    --nav-bg: rgba(235, 208, 177, 0.85); /* Slightly darker tint than #FFE4C4 with soft opacity */
+    --border-color: rgba(0, 0, 0, 0.1);
 }
 
 [data-theme="dark"] {
-    --bg-color: #000000 !important; /* Force pitch black */
-    --text-color: #FAD6A5 !important;
-    --text-muted: #a3957a;
-    --accent-color: #E5D2AB;
+    --bg-color: #000000;
+    --text-color: #FAD6A5; /* Muted Apricot Font Color */
+    --text-muted: #a68e6d;
+    --accent-color: #FAD6A5;
     --card-bg: #111111;
     --nav-bg: rgba(0, 0, 0, 0.85);
     --border-color: #222226;
@@ -29,12 +28,12 @@
 
 html {
     scroll-behavior: smooth;
-    background-color: var(--bg-color); /* Apply it to the html tag too */
+    background-color: var(--bg-color);
 }
 
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: var(--bg-color) !important; /* Explicitly force it here */
+    background-color: var(--bg-color) !important;
     color: var(--text-color) !important;
     line-height: 1.5;
     transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
@@ -99,8 +98,6 @@ body {
 }
 
 /* Left-Aligned Hero Section Layout Configuration */
-/* Update these explicit blocks inside your style.css file */
-
 .hero {
     min-height: 90vh;
     display: flex;
@@ -114,8 +111,8 @@ body {
 .hero-content {
     max-width: 800px;
     margin-top: 4rem;
-    margin-left: 0; /* Forced alignment reset */
-    margin-right: auto; /* Pushes remainder space away */
+    margin-left: 0; 
+    margin-right: auto; 
     text-align: left; 
     position: relative;
     z-index: 2; 
@@ -128,8 +125,7 @@ body {
     line-height: 1.05;
     letter-spacing: -0.05em;
     margin-bottom: 2rem;
-    margin-left: 0;
-    text-align: left;
+    color: var(--text-color);
 }
 
 .hero p {
@@ -138,7 +134,6 @@ body {
     font-weight: 400;
     max-width: 600px;
     line-height: 1.6;
-    text-align: left;
 }
 
 #hero-canvas {
@@ -198,6 +193,7 @@ body {
     font-weight: 700;
     letter-spacing: -0.02em;
     margin-bottom: 1rem;
+    color: var(--text-color);
 }
 
 .project-card p {
