@@ -111,10 +111,11 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         
-        // Dynamic Palette Anchors
-        const baseR = isDark ? 9 : 255;
-        const baseG = isDark ? 9 : 228;
-        const baseB = isDark ? 10 : 196;
+        // Base Dynamic Background Layers
+        // Swapped out the old warm bisque for a pristine, clean off-white background matching the bottom panel
+        const baseR = isDark ? 9   : 252; // #FC
+        const baseG = isDark ? 9   : 252; // #FC
+        const baseB = isDark ? 10  : 249; // #F9
         
         for (let y = 1; y < height - 1; y++) {
             for (let x = 1; x < width - 1; x++) {
