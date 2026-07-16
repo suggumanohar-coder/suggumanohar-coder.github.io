@@ -74,9 +74,12 @@ class Particle {
 }
 
 // Generate fluid ripples on mouse movements inside the hero element
+// Generate fluid ripples on mouse movements inside the hero element
 hero.addEventListener('mousemove', (event) => {
-    // Calculate accurate coordinate offset relative to the hero section bounds
-    const rect = hero.getBoundingClientRect();
+    // Get the canvas bounding limits
+    const rect = canvas.getBoundingClientRect();
+    
+    // Calculate the absolute position relative specifically to the canvas viewport edge
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 
@@ -87,7 +90,6 @@ hero.addEventListener('mousemove', (event) => {
         }
     }
 });
-
 // Render Loop
 function animateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
