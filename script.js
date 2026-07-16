@@ -113,9 +113,9 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Base Dynamic Background Layers
         // Swapped out the old warm bisque for a pristine, clean off-white background matching the bottom panel
-        const baseR = isDark ? 9   : 252; // #FC
-        const baseG = isDark ? 9   : 252; // #FC
-        const baseB = isDark ? 10  : 249; // #F9
+        const baseR = isDark ? 0   : 252; // #FC
+        const baseG = isDark ? 0   : 252; // #FC
+        const baseB = isDark ? 0  : 249; // #F9
         
         for (let y = 1; y < height - 1; y++) {
             for (let x = 1; x < width - 1; x++) {
