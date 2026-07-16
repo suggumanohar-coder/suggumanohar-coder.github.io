@@ -1,7 +1,8 @@
 /* Custom CSS Variables for High-End Minimalist Aesthetics */
+/* Custom CSS Variables for High-End Minimalist Aesthetics */
 :root {
-    --bg-color: #E5D2AB;
-    --text-color: #000000;
+    --bg-color: #E5D2AB !important; /* Force the custom sand color */
+    --text-color: #000000 !important;
     --text-muted: #4a4538;
     --accent-color: #000000;
     --card-bg: rgba(0, 0, 0, 0.04);
@@ -10,8 +11,8 @@
 }
 
 [data-theme="dark"] {
-    --bg-color: #000000;
-    --text-color: #E5D2AB;
+    --bg-color: #000000 !important; /* Force pitch black */
+    --text-color: #E5D2AB !important;
     --text-muted: #a3957a;
     --accent-color: #E5D2AB;
     --card-bg: #111111;
@@ -28,12 +29,13 @@
 
 html {
     scroll-behavior: smooth;
+    background-color: var(--bg-color); /* Apply it to the html tag too */
 }
 
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    background-color: var(--bg-color) !important; /* Explicitly force it here */
+    color: var(--text-color) !important;
     line-height: 1.5;
     transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
     -webkit-font-smoothing: antialiased;
