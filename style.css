@@ -1,7 +1,7 @@
 /* Custom CSS Variables for High-End Minimalist Aesthetics */
 /* Custom CSS Variables for High-End Minimalist Aesthetics */
 :root {
-    --bg-color: #E5D2AB !important; /* Force the custom sand color */
+    --bg-color: #FFE4C4 !important; /* Force the custom sand color */
     --text-color: #000000 !important;
     --text-muted: #4a4538;
     --accent-color: #000000;
@@ -12,7 +12,7 @@
 
 [data-theme="dark"] {
     --bg-color: #000000 !important; /* Force pitch black */
-    --text-color: #E5D2AB !important;
+    --text-color: #FAD6A5 !important;
     --text-muted: #a3957a;
     --accent-color: #E5D2AB;
     --card-bg: #111111;
@@ -99,12 +99,14 @@ body {
 }
 
 /* Left-Aligned Hero Section Layout Configuration */
+/* Update these explicit blocks inside your style.css file */
+
 .hero {
     min-height: 90vh;
     display: flex;
-    justify-content: flex-start; /* STRICT LEFT ALIGNMENT */
+    justify-content: flex-start; 
     align-items: center;
-    padding: 0 8%; /* Matched navbar alignment padding */
+    padding: 0 8%;
     position: relative; 
     overflow: hidden;   
 }
@@ -112,7 +114,9 @@ body {
 .hero-content {
     max-width: 800px;
     margin-top: 4rem;
-    text-align: left; /* Forces typography strings cleanly to the left */
+    margin-left: 0; /* Forced alignment reset */
+    margin-right: auto; /* Pushes remainder space away */
+    text-align: left; 
     position: relative;
     z-index: 2; 
     pointer-events: none; 
@@ -124,7 +128,8 @@ body {
     line-height: 1.05;
     letter-spacing: -0.05em;
     margin-bottom: 2rem;
-    color: var(--text-color);
+    margin-left: 0;
+    text-align: left;
 }
 
 .hero p {
@@ -133,6 +138,7 @@ body {
     font-weight: 400;
     max-width: 600px;
     line-height: 1.6;
+    text-align: left;
 }
 
 #hero-canvas {
