@@ -27,10 +27,13 @@ const backgroundCanvas = document.getElementById('hero-canvas');
 const canvasContext = backgroundCanvas.getContext('2d');
 
 let width = 0, height = 0;
-let rippleDensity = 2.5; 
+let rippleDensity = 2.0; // Lowered density index slightly for fewer, smoother waves
 
 let buffer1 = [];
 let buffer2 = [];
+
+// Track frame throttling to omit redundant calculations, reducing wave density further
+let frameCount = 0;
 
 function setupWaveBuffers() {
     width = heroSection.clientWidth;
@@ -58,6 +61,10 @@ function dropWater(dx, dy, radius, force) {
 }
 
 window.addEventListener('mousemove', (e) => {
+    frameCount++;
+    // Skip frames dynamically to make the ripple structure scarcer and cleaner
+    if (frameCount % 2 !== 0) return; 
+
     const bounds = heroSection.getBoundingClientRect();
     if (e.clientX >= bounds.left && e.clientX <= bounds.right &&
         e.clientY >= bounds.top && e.clientY <= bounds.bottom) {
@@ -65,7 +72,7 @@ window.addEventListener('mousemove', (e) => {
         const relX = Math.floor(e.clientX - bounds.left);
         const relY = Math.floor(e.clientY - bounds.top);
         
-        dropWater(relX, relY, 4, 512);
+        dropWater(relX, relY, 4, 400); // Shifted maximum energy down for soft wave impact
     }
 });
 
@@ -94,18 +101,16 @@ function processWaterSimulation() {
                 let pixelPos = idx * 4;
                 
                 if (isDark) {
-                    // DARK MODE: Targets #000000. 
-                    // Ripple drops introduce a hint of visible color highlights
-                    data[pixelPos]     = Math.min(Math.max(0, 229 + shade), 255); 
-                    data[pixelPos + 1] = Math.min(Math.max(0, 210 + shade), 255); 
-                    data[pixelPos + 2] = Math.min(Math.max(0, 171 + shade), 255); 
-                    data[pixelPos + 3] = Math.min(Math.max(0, Math.abs(shade) * 1.5), 200); 
+                    // DARK MODE: Reflect light gold accents (#E5D2AB) onto black void
+                    data[pixelPos]     = Math.min(Math.max(0, 229 + shade * 0.5), 255); // R
+                    data[pixelPos + 1] = Math.min(Math.max(0, 210 + shade * 0.5), 255); // G
+                    data[pixelPos + 2] = Math.min(Math.max(0, 171 + shade * 0.3), 255); // B
+                    data[pixelPos + 3] = Math.min(Math.max(0, Math.abs(shade) * 2.5), 230); // Higher luminosity opacity
                 } else {
-                    // LIGHT MODE: Targets #E5D2AB.
-                    // Ripple drops render a dark fluid refraction
-                    data[pixelPos]     = Math.max(0, 190 + shade); 
-                    data[pixelPos + 1] = Math.max(0, 175 + shade); 
-                    data[pixelPos + 2] = Math.max(0, 140 + shade); 
+                    // LIGHT MODE: Produce dynamic deep refractions into tan page colors
+                    data[pixelPos]     = Math.max(0, 185 + shade); 
+                    data[pixelPos + 1] = Math.max(0, 170 + shade); 
+                    data[pixelPos + 2] = Math.max(0, 135 + shade); 
                     data[pixelPos + 3] = Math.min(Math.max(0, Math.abs(shade) * 1.2), 160);
                 }
             }
