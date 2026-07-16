@@ -102,7 +102,7 @@ body {
     display: flex;
     justify-content: flex-start; /* STRICT LEFT ALIGNMENT */
     align-items: center;
-    padding: 0 12%;
+    padding: 0 8%; /* Matched navbar alignment padding */
     position: relative; 
     overflow: hidden;   
 }
@@ -110,10 +110,10 @@ body {
 .hero-content {
     max-width: 800px;
     margin-top: 4rem;
-    text-align: left; /* Text forced cleanly to the left margins */
+    text-align: left; /* Forces typography strings cleanly to the left */
     position: relative;
     z-index: 2; 
-    pointer-events: none; /* Allows canvas interaction calculations beneath text strings */
+    pointer-events: none; 
 }
 
 .hero h1 {
@@ -122,6 +122,7 @@ body {
     line-height: 1.05;
     letter-spacing: -0.05em;
     margin-bottom: 2rem;
+    color: var(--text-color);
 }
 
 .hero p {
@@ -147,7 +148,7 @@ body {
 /* Distinct Structural Page Section Separation Line */
 .section-divider {
     height: 1px;
-    width: 76%;
+    width: 84%;
     margin: 0 auto;
     background-color: var(--border-color);
     transition: background-color 0.4s ease;
@@ -155,7 +156,7 @@ body {
 
 /* Portfolio Projects Display Layout */
 .projects-section {
-    padding: 8rem 12%;
+    padding: 8rem 8%;
 }
 
 .projects-section h2 {
@@ -214,8 +215,8 @@ body {
 
 /* Isolated Footer & Social Panel */
 .footer-contact {
-    margin-top: 8rem; /* Keeps clean breathing distance from project nodes */
-    padding: 6rem 12 4rem 12%;
+    margin-top: 8rem; 
+    padding: 6rem 8% 4rem 8%;
     border-top: 1px solid var(--border-color);
     background-color: var(--bg-color);
     display: flex;
@@ -239,7 +240,7 @@ body {
 .footer-socials a {
     color: var(--text-color);
     text-decoration: none;
-    font-size: 1.6rem; /* Enlarge purely symbol-based icons slightly */
+    font-size: 1.6rem; 
     transition: opacity 0.2s ease, color 0.2s ease;
 }
 
